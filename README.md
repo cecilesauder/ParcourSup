@@ -44,6 +44,14 @@ Ces chiffres décrivent les établissements, pas leurs élèves ni leurs chances
 
 Les données sont agrégées, proviennent du jeu officiel de la DEPP et sont sous Licence Ouverte Etalab 2.0 selon le portail. [Lire les informations sur le snapshot et sa mise à jour](data/README.md).
 
+## Simulation théorique d’une pondération progressive
+
+Un outil séparé compare le classement de mérite à une priorité croissante pour les candidat·es provenant de lycées fictifs à IPS plus bas. Le scénario par défaut utilise **12 candidat·es inventé·es**, quatre lycées imaginaires et des poids de 0 à 40 %. Le score illustratif mélange le percentile de mérite et le rang de priorité IPS selon la formule `(1 - poids) × mérite + poids × contexte IPS`.
+
+Dans cet exemple seulement, le top 6 reste le même à 0 et 10 %. À 20 %, une place du top 6 change : F08 en sort et F02 y entre; l’IPS moyen des lycées du groupe fictif passe de 110 à 103,33. Cela montre l’effet possible de la formule sur **cet échantillon fabriqué**, pas une amélioration réelle de l’équité ou des chances d’admission.
+
+Le simulateur ne touche pas à `order_call.py`, ne calcule pas d’admissions Parcoursup et ne transforme pas l’IPS moyen du lycée en caractéristique individuelle. [Voir la formule, les hypothèses et les limites](docs/simulation-ponderation-progressive-ips.md).
+
 ## Revendications et consultation
 
 Les sources publiques suffisent pour dégager des sujets importants — transparence, attente, accompagnement, capacité d’accueil, contraintes matérielles et équité sociale — mais elles ne suffisent pas pour choisir les poids d’une règle. Les baromètres ne portent que sur une partie des usagers; les reportages racontent des situations particulières; les revendications engagent les organisations qui les portent.
@@ -52,9 +60,9 @@ Un [brouillon de questionnaire de consultation](docs/questionnaire-experiences-p
 
 ## IPS et critère social : notre prudence
 
-La première étape choisie est de décrire le contexte IPS des lycées, sans modifier les admissions. La moyenne du lycée ne décrit pas la situation de chaque élève. Les REP/REP+ désignent des réseaux d’écoles et de collèges, pas une catégorie générale de lycées : nous ne créons donc pas automatiquement une « priorité lycée REP ».
+La première étape choisie est de décrire le contexte IPS des lycées, sans modifier les admissions. Une simulation de pondération progressive existe maintenant, mais **uniquement comme outil de sensibilité sur un échantillon fictif**. La moyenne du lycée ne décrit pas la situation de chaque élève. Les REP/REP+ désignent des réseaux d’écoles et de collèges, pas une catégorie générale de lycées : nous ne créons donc pas automatiquement une « priorité lycée REP ».
 
-La [note sur l’IPS et le prototype](docs/prototype-ips-et-critere-social.md) présente les options futures. Une éventuelle simulation de priorité contextuelle resterait séparée de l’algorithme actuel et demanderait des choix explicites, une consultation des lycéen·nes et une vérification du cadre applicable.
+La [note sur l’IPS et le prototype](docs/prototype-ips-et-critere-social.md) présente les options futures. Tout usage d’un poids dans une règle réelle demanderait des choix explicites, une consultation des lycéen·nes et une vérification du cadre applicable.
 
 ## Nos principes
 
@@ -76,6 +84,7 @@ La [note sur l’IPS et le prototype](docs/prototype-ips-et-critere-social.md) p
 - [x] Préparer un questionnaire à relire avec les personnes concernées avant diffusion.
 - [x] Étudier les limites d’un critère IPS et expliquer pourquoi REP/REP+ ne désigne pas une catégorie générale de lycées.
 - [x] Charger le snapshot DEPP 2025-2026 et créer un audit descriptif de l’IPS sans effet sur l’ordre d’appel.
+- [x] Créer une simulation de sensibilité à poids progressif sur un échantillon entièrement fictif, séparée de l’ordre d’appel.
 - [ ] Consulter directement des lycéen·nes aux parcours variés et intégrer leurs priorités choisies.
 - [x] Étendre le modèle au secteur géographique et comparer A5/A6 au code officiel épinglé.
 - [ ] Relier, sous un cadre autorisé, des données de candidatures aux contextes IPS pour étudier des résultats d’admission.
@@ -89,6 +98,7 @@ Il faut Python 3.10 ou une version plus récente. Aucune bibliothèque suppléme
 ```bash
 python -m unittest discover -s tests -v
 PYTHONPATH=. python examples/audit_ips.py
+PYTHONPATH=. python examples/simulate_progressive_ips.py
 ```
 
 Pour voir l’exemple de comparaison des règles actuelles :
@@ -109,6 +119,7 @@ Les documents ci-dessous donnent davantage de détails; il n’est pas nécessai
 
 - [Témoignages, enquêtes, revendications et sources officielles](docs/retours-lyceen-ips-recherche.md) — ce qui ressort des sources, et ce qu’elles ne permettent pas de conclure.
 - [Audit descriptif IPS 2025-2026](docs/audit-descriptif-ips-2025-2026.md) — résultats calculés, méthode et limites.
+- [Simulation théorique d’une pondération progressive](docs/simulation-ponderation-progressive-ips.md) — formule, exemple fictif, commandes et garde-fous.
 - [Questionnaire de consultation à relire avant diffusion](docs/questionnaire-experiences-parcoursup.md) — questions, précautions d’anonymat et méthode de restitution.
 - [Intégrer l’IPS au prototype](docs/prototype-ips-et-critere-social.md) — options, données, simulations et tests à prévoir.
 - [Les revendications lycéennes et l’audit du cahier des charges](docs/revendications-et-audit-cahier-des-charges.md) — demandes publiques et points à clarifier.

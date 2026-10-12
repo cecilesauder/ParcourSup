@@ -29,7 +29,7 @@ Les données récentes sont associées à un UAI et à une rentrée scolaire. El
 |---|---|---|---|
 | **A. Audit descriptif seul — recommandé d’abord** | L’IPS est joint aux données synthétiques ou de test; il ne change ni le classement ni l’ordre d’appel. On compare les résultats par groupes de contexte. | Mesure les écarts et valide les données sans créer un avantage d’admission. | Ne corrige pas en soi une éventuelle inégalité; les conclusions dépendent des données d’entrée et des métriques choisies. |
 | **B. Scénario de représentation minimale** | Dans une branche expérimentale, un paramètre garantit une proportion minimale de personnes appelées provenant de lycées situés dans une bande IPS pré-définie. | Facile à comparer, en principe lisible; peut être testé en parallèle des taux de bourse et de secteur déjà modélisés. | Il faut décider la bande IPS, le taux, le groupe d’origine, la priorité en cas de conflit, la faisabilité et le traitement des données absentes. C’est un choix politique et potentiellement juridique, pas une conséquence automatique de l’IPS. |
-| **C. Bonus de rang lié à l’IPS du lycée** | Le rang pédagogique serait modifié d’après l’IPS moyen du lycée d’origine. | Produit un effet gradué plutôt qu’un groupe binaire. | Plus difficile à expliquer; le poids et la fonction de transformation seraient arbitraires sans co-conception; un petit écart de données pourrait changer l’ordre. **À ne pas coder avant décision explicite.** |
+| **C. Bonus de rang lié à l’IPS du lycée** | Le rang pédagogique serait modifié d’après l’IPS moyen du lycée d’origine. | Produit un effet gradué plutôt qu’un groupe binaire. | Plus difficile à expliquer; le poids et la fonction de transformation seraient arbitraires sans co-conception; un petit écart de données pourrait changer l’ordre. Le simulateur séparé peut illustrer une formule sur des données fictives, mais **aucun bonus n’est appliqué à l’ordre d’appel**. |
 
 Le critère individuel de bourse actuellement modélisé doit rester distinct de l’IPS d’établissement. Le code de l’éducation décrit, dans les formations concernées, des taux minimaux portant sur des bacheliers boursiers; il ne crée pas une priorité nationale générale nommée « lycée REP » ou « faible IPS » [6]. Il faut aussi garder distincts le classement de la formation, l’ordre d’appel, une proposition, son acceptation et l’inscription finale [6][7].
 
@@ -75,9 +75,11 @@ Les distributions par établissement, secteur, type de lycée et voie sont publi
 
 Pour comparer ultérieurement les résultats d’admission selon le contexte IPS, il faudra disposer de données de candidatures et d’issues reliées de manière autorisée et suffisamment protégée au lycée d’origine. Ces données ne sont pas dans le jeu DEPP public; aucune conclusion sur les admissions n’est donc simulée ici.
 
-### Étape 3 — Comparer des scénarios explicitement paramétrés
+### Étape 3 — Simuler des pondérations : illustration fictive disponible
 
-Si les ateliers/questionnaire concluent qu’une mesure contextuelle mérite un test, ajouter une fonction séparée du calcul officiel, par exemple `simulate_contextual_minimum(...)`. Ne pas modifier silencieusement `order_call_with_quotas`. Comparer au minimum :
+La fonction `simulate_progressive_ips(...)` compare maintenant plusieurs poids sur un échantillon déterministe et entièrement fictif. Elle mélange un percentile de mérite et un rang de priorité IPS du lycée d’origine. Le script est distinct de `order_call_with_quotas` : il ne change ni le classement pédagogique ni l’ordre d’appel Parcoursup. Sa formule, ses poids d’exemple et ses limites sont expliqués dans [la note de simulation](simulation-ponderation-progressive-ips.md).
+
+Cette étape sert uniquement à rendre visible la mécanique. Pour tester une règle réelle, ou comparer des résultats de candidature selon le contexte IPS, il faudra d’abord en discuter avec les lycéen·nes et obtenir des données adaptées dans un cadre autorisé. Les comparaisons futures devront distinguer clairement :
 
 - la règle actuelle sans IPS;
 - une variante descriptive sans effet sur l’appel;
@@ -89,13 +91,13 @@ Ne pas adopter de taux ou seuils définitifs avant d’avoir consulté des lycé
 
 ## Tests réalisés et validations encore nécessaires
 
-Les nouveaux tests vérifient le millésime et le nombre d’UAI du snapshot, la présence d’une valeur IPS absente, les statistiques attendues, le traitement des champs manquants, le rejet des doublons et des valeurs illisibles, ainsi que l’absence de changement de l’ordre d’appel lorsqu’on exécute l’audit. Les tests officiels A5/A6 et tous les tests déjà présents passent également.
+Les tests vérifient le millésime et le nombre d’UAI du snapshot, la présence d’une valeur IPS absente, les statistiques attendues, le traitement des champs manquants, le rejet des doublons et des valeurs illisibles, ainsi que l’absence de changement de l’ordre d’appel lorsqu’on exécute l’audit. Les tests du simulateur fictif vérifient que le poids nul conserve l’ordre de mérite, que les poids croissants peuvent changer le top-k et que les entrées invalides sont rejetées. Les tests officiels A5/A6 et tous les tests déjà présents passent également.
 
 Avant toute simulation qui influencerait des appels, il restera à vérifier une jointure UAI/année/voie sur des données de candidature autorisées, le traitement des données absentes, les seuils de groupe, les effets croisés bourse × secteur × contexte, la faisabilité, la sensibilité autour des seuils et l’explication lisible de chaque déplacement. Ces choix ne sont pas codés dans la branche actuelle.
 
 ## Décision à prendre avant toute modification de l’ordre d’appel
 
-L’Option A a été mise en place : le projet calcule maintenant un audit descriptif reproductible, séparé du moteur d’ordre d’appel. L’Option B reste une éventuelle simulation à part, à discuter avec des lycéen·nes avant de choisir un seuil ou un taux. L’Option C n’est pas recommandée à ce stade. Aucun bonus d’admission n’est codé et l’IPS n’est pas utilisé comme statut individuel.
+L’Option A a été mise en place : le projet calcule un audit descriptif reproductible, séparé du moteur d’ordre d’appel. À la demande du projet, une pondération progressive est maintenant illustrée par un simulateur distinct et un échantillon fictif; cela ne constitue pas l’adoption de l’Option C. L’Option B ou toute règle réelle nécessitera une discussion avec des lycéen·nes et une vérification du cadre applicable. Aucun bonus n’est appliqué à l’ordre d’appel et l’IPS n’est pas utilisé comme statut individuel.
 
 ## Sources
 
