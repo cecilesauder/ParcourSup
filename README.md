@@ -25,6 +25,7 @@ Le saut au premier rang d’appel lorsqu’un quota est contraignant est une con
 - [x] Prototype du cas « quota boursiers seul » et de la fonction expérimentale à réserve.
 - [x] Tests unitaires et vérification exhaustive de la substituabilité sur de petits ensembles.
 - [x] Synthèse des revendications publiques de lycéen·nes et audit du cahier des charges transmis.
+- [x] Analyse du code public de l’ordre d’appel et du moteur de propositions; recommandations classées par priorité.
 - [ ] Recueillir et documenter les revendications exprimées directement par les lycéen·nes.
 - [ ] Définir des critères de réussite compréhensibles par les candidat·es : lisibilité, rangs vécus, délais mesurés, résultats par groupe.
 - [ ] Étendre le modèle aux taux résidents, aux règles de capacité et au calcul quotidien des propositions.
@@ -54,3 +55,5 @@ PYTHONPATH=. python examples/compare_policies.py
 Voir [l’analyse initiale](docs/analyse-initiale.md) pour le périmètre, les corrections apportées aux hypothèses de départ et les questions ouvertes.
 
 Voir aussi [les revendications lycéennes et l’audit du cahier des charges](docs/revendications-et-audit-cahier-des-charges.md), qui distingue les demandes d’accès et de capacité des pistes de réforme algorithmique.
+
+L’[analyse du code actuel et les pistes d’amélioration](docs/analyse-algorithme-actuel-et-pistes.md) détaille l’ordre d’appel, le moteur de propositions quotidiennes et les prochaines étapes de validation.
