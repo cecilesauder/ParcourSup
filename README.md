@@ -1,59 +1,83 @@
-# ParcourSup — laboratoire d’amélioration
+# ParcourSup : comprendre et améliorer l’algorithme
 
-Ce dépôt est un espace indépendant d’analyse et d’expérimentation autour des algorithmes de Parcoursup. Il part d’une exigence politique et pratique : **les lycéen·nes, premier·es concerné·es, doivent participer à la définition des problèmes, des critères d’évaluation et des changements proposés**. Une modification techniquement élégante n’est pas une amélioration si elle dégrade leur situation ou si elle est conçue sans leurs retours.
+## Pourquoi ce projet ?
 
-> **Statut : prototype de recherche, non destiné à la production.** Le code ici ne remplace pas le moteur de Parcoursup et ne reproduit pas toutes ses règles.
+Parcoursup influence l’entrée dans les études après le bac. Les lycéen·nes, qui vivent la procédure, doivent participer à la définition des problèmes et des solutions.
 
-## Première piste étudiée
+Le manque de transparence revient souvent dans les critiques. Dans le baromètre CSA 2025, réalisé auprès de 1 005 jeunes inscrits sur Parcoursup, **83 %** ont jugé la procédure stressante, **53 %** l’ont trouvée transparente et **34 %** juste et équitable. Ce sont des avis recueillis après la campagne : ces chiffres ne prouvent pas, à eux seuls, que l’algorithme est la cause du stress. [Lire l’étude CSA](https://csa.eu/wp-content/uploads/2025/10/2500648-Baro-Parcoursup-2025-Resultats_1609_vSITE-CSA.pdf).
 
-Le prototype compare deux objets différents :
+Certaines organisations lycéennes et étudiantes demandent aussi **plus de places et la fin de la sélection**. Une modification de l’algorithme ne peut pas créer de places ni décider, à elle seule, de supprimer la sélection. Ces choix doivent être discutés ouvertement. [Voir leurs revendications](https://union-etudiante.fr/10mesures/).
 
-1. l’ordre d’appel avec quota minimum de boursiers, formalisé pour le cas où le taux de résidents est nul;
-2. une fonction de choix expérimentale à réserve de places pour les boursiers, qui sélectionne un ensemble de candidats à l’intérieur d’une capacité donnée.
+## En bref : comment fonctionne le système ?
 
-La fonction de choix renvoie un **ensemble**, pas une liste d’appel. La traiter comme un simple nouvel ordre de classement serait incorrect. L’utiliser dans l’affectation différée suppose de définir le mécanisme complet, les préférences des candidat·es, les capacités, les règles d’acceptabilité et la politique en cas de places vacantes.
+1. **Chaque formation classe les candidatures.** Les équipes de la formation examinent les dossiers et établissent leur classement.
+2. **Parcoursup établit un ordre d’appel.** Il part du classement de la formation et applique notamment des règles minimales liées aux élèves boursiers et au secteur géographique.
+3. **Les propositions sont envoyées au fil de la campagne.** Le nombre de personnes appelées dépend aussi des places, des réglages de la formation et des réponses déjà reçues.
+4. **Les candidat·es répondent.** Une proposition n’est pas la même chose qu’une admission acceptée; les refus et désistements peuvent libérer des places pour d’autres personnes.
 
-## Ce que nous savons — et ce qu’il reste à démontrer
+**À retenir :** l’ordre d’appel n’est pas à lui seul l’algorithme complet de Parcoursup. Et respecter un quota parmi les personnes appelées ne garantit pas automatiquement le même quota parmi celles qui acceptent une place.
 
-Le code et la documentation officiels décrivent un ordre d’appel calculé une fois à partir du classement pédagogique et des taux applicables. Les propositions sont ensuite envoyées en continu dans cet ordre. Le nombre quotidien dépend aussi des réponses antérieures et de paramètres d’appel fixés par les formations. L’ordre d’appel seul ne suffit donc pas à démontrer une cause de délai ou un gain de vitesse.
+## Quelques mots expliqués simplement
 
-Le saut au premier rang d’appel lorsqu’un quota est contraignant est une conséquence possible de la règle de préfixe, pas nécessairement un bug. Le supprimer implique d’évaluer explicitement l’équité, la conformité aux règles, les effets par groupe et la compréhension des candidat·es.
+- **Classement de la formation :** l’ordre établi par la formation après l’examen des dossiers.
+- **Ordre d’appel :** l’ordre dans lequel Parcoursup propose ensuite des places aux candidat·es en attente. Il peut différer du classement de la formation afin d’appliquer les règles de quota.
+- **Quota :** une part minimale de personnes répondant à un critère — par exemple être boursier·e — que la règle cherche à faire apparaître parmi les personnes appelées.
+- **Liste d’attente :** les personnes qui n’ont pas encore reçu de proposition pour ce vœu, mais pourraient en recevoir une si des places se libèrent et si leur rang est atteint.
+- **Fonction de choix :** une règle qui sélectionne un groupe de personnes à partir des candidatures et des places disponibles. Elle ne produit pas forcément une liste ordonnée.
 
-## État d’avancement
+## Ce que nous testons pour l’instant
 
-- [x] Analyse initiale des affirmations et des sources officielles.
-- [x] Prototype du cas « quota boursiers seul » et de la fonction expérimentale à réserve.
-- [x] Tests unitaires et vérification exhaustive de la substituabilité sur de petits ensembles.
-- [x] Synthèse des revendications publiques de lycéen·nes et audit du cahier des charges transmis.
-- [x] Analyse du code public de l’ordre d’appel et du moteur de propositions; recommandations classées par priorité.
-- [ ] Recueillir et documenter les revendications exprimées directement par les lycéen·nes.
-- [ ] Définir des critères de réussite compréhensibles par les candidat·es : lisibilité, rangs vécus, délais mesurés, résultats par groupe.
-- [ ] Étendre le modèle aux taux résidents, aux règles de capacité et au calcul quotidien des propositions.
-- [ ] Comparer les mécanismes par simulation avec des hypothèses et données publiées, sans confondre simulation et preuve d’impact réel.
+Ce dépôt contient un **petit prototype de recherche**, écrit en Python. Il compare :
+
+- une version simplifiée de l’ordre d’appel avec quota boursier seul;
+- une autre règle expérimentale, qui réserve une part des places aux candidat·es boursier·es avant de compléter le groupe selon le classement.
+
+Ces deux règles ne font pas exactement la même chose : la première produit un ordre d’appel; la seconde choisit un groupe de personnes. On ne peut donc pas remplacer l’une par l’autre sans définir le mécanisme complet.
+
+> **Ce prototype ne décide de l’admission de personne et ne reproduit pas toutes les règles de Parcoursup.** Il ne couvre pas encore les quotas liés au secteur géographique, les internats, ni tous les échanges quotidiens de propositions et de réponses. Les tests vérifient des exemples simplifiés; ils ne prouvent pas qu’une règle est juste pour l’ensemble des candidat·es.
+
+## Nos principes
+
+- Expliquer les règles dans des mots compréhensibles, y compris les raisons d’un refus ou d’une attente.
+- Distinguer les choix techniques des choix politiques, comme le nombre de places ou le principe de sélection.
+- Tester les effets sur des profils différents, pas seulement calculer une moyenne.
+- Ne pas promettre des délais plus courts ou une meilleure équité avant de les avoir mesurés.
+- Concevoir les critères de réussite avec les lycéen·nes, et pas seulement parler à leur place.
+
+## Où en est le projet ?
+
+- [x] Lire et documenter des sources officielles sur le fonctionnement de Parcoursup.
+- [x] Créer un premier prototype et ses tests sur des petits exemples.
+- [x] Examiner les revendications publiques de lycéen·nes et les hypothèses du cahier des charges.
+- [x] Analyser le code public de l’ordre d’appel et des propositions quotidiennes.
+- [ ] Recueillir directement les priorités de lycéen·nes aux parcours variés.
+- [ ] Étendre le modèle aux règles liées au secteur géographique et aux propositions quotidiennes.
+- [ ] Comparer les règles dans des simulations expliquées et reproductibles.
 
 ## Lancer les tests
 
-Python 3.10 ou plus récent, sans dépendance externe :
+Il faut Python 3.10 ou une version plus récente. Aucune bibliothèque supplémentaire n’est nécessaire.
 
 ```bash
 python -m unittest discover -s tests -v
 ```
 
-Lancer l’exemple comparatif :
+Pour voir un exemple de comparaison :
 
 ```bash
 PYTHONPATH=. python examples/compare_policies.py
 ```
 
-## Sources de référence
+## Pour aller plus loin
 
-- [Dépôt officiel des algorithmes de Parcoursup](https://gitlab.mim-libre.fr/parcoursup/algorithmes-de-parcoursup) — code Java, tests, documentation et bac à sable.
-- [Présentation officielle des algorithmes de Parcoursup, édition 2025](https://services.dgesip.fr/fichiers/presentation_algorithmes_parcoursup_2025_finale.pdf) — notamment §§ 2.4–2.5 et 4.
-- [Castéran, *Vérification de l’algorithme de calcul des ordres d’appel…*](https://hal.science/hal-03388671/document) — spécification et travaux de vérification formelle.
-- [Hafalir, Yenmez et Yildirim (2013), *Effective Affirmative Action in School Choice*](https://www.econometricsociety.org/publications/theoretical-economics/lookup/paper/8775) — modèle académique de réserves minoritaires et choix substituable dans son cadre.
+Les documents ci-dessous donnent davantage de détails; il n’est pas nécessaire de les lire pour comprendre l’objectif général du projet.
 
-Voir [l’analyse initiale](docs/analyse-initiale.md) pour le périmètre, les corrections apportées aux hypothèses de départ et les questions ouvertes.
+- [Les revendications lycéennes et l’audit du cahier des charges](docs/revendications-et-audit-cahier-des-charges.md) — ce qui est demandé et les points à clarifier.
+- [Analyse du code actuel et pistes d’amélioration](docs/analyse-algorithme-actuel-et-pistes.md) — explication plus technique du calcul de l’ordre d’appel et des propositions.
+- [Analyse initiale](docs/analyse-initiale.md) — premières conclusions, vérifications et questions ouvertes.
 
-Voir aussi [les revendications lycéennes et l’audit du cahier des charges](docs/revendications-et-audit-cahier-des-charges.md), qui distingue les demandes d’accès et de capacité des pistes de réforme algorithmique.
+### Sources principales
 
-L’[analyse du code actuel et les pistes d’amélioration](docs/analyse-algorithme-actuel-et-pistes.md) détaille l’ordre d’appel, le moteur de propositions quotidiennes et les prochaines étapes de validation.
+- [Dépôt public du code de Parcoursup](https://gitlab.mim-libre.fr/parcoursup/algorithmes-de-parcoursup).
+- [Présentation officielle des algorithmes de Parcoursup, 2025](https://services.dgesip.fr/fichiers/presentation_algorithmes_parcoursup_2025_finale.pdf).
+- [Comité éthique et scientifique : recommandations sur la transparence des classements](https://www.enseignementsup-recherche.gouv.fr/fr/remise-du-rapport-annuel-2025-du-comite-ethique-et-scientifique-de-parcoursup-et-mon-master-101305).
