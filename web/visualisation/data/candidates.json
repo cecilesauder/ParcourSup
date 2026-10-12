@@ -1,0 +1,14 @@
+[
+  { "id": "F01", "meritScore": 96.0, "school": "Lycée fictif A", "schoolIps": 80.0 },
+  { "id": "F02", "meritScore": 93.0, "school": "Lycée fictif A", "schoolIps": 80.0 },
+  { "id": "F03", "meritScore": 91.0, "school": "Lycée fictif A", "schoolIps": 80.0 },
+  { "id": "F04", "meritScore": 98.0, "school": "Lycée fictif B", "schoolIps": 100.0 },
+  { "id": "F05", "meritScore": 95.0, "school": "Lycée fictif B", "schoolIps": 100.0 },
+  { "id": "F06", "meritScore": 89.0, "school": "Lycée fictif B", "schoolIps": 100.0 },
+  { "id": "F07", "meritScore": 99.0, "school": "Lycée fictif C", "schoolIps": 120.0 },
+  { "id": "F08", "meritScore": 94.0, "school": "Lycée fictif C", "schoolIps": 120.0 },
+  { "id": "F09", "meritScore": 88.0, "school": "Lycée fictif C", "schoolIps": 120.0 },
+  { "id": "F10", "meritScore": 97.0, "school": "Lycée fictif D", "schoolIps": 140.0 },
+  { "id": "F11", "meritScore": 92.0, "school": "Lycée fictif D", "schoolIps": 140.0 },
+  { "id": "F12", "meritScore": 86.0, "school": "Lycée fictif D", "schoolIps": 140.0 }
+]

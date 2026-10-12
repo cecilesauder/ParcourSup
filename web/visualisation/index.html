@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f5f3ed">
+  <meta name="description" content="Explorer, sur des données entièrement fictives, comment un poids IPS modifie un classement théorique.">
+  <title>Rang en clair — atelier de simulation IPS</title>
+  <link rel="stylesheet" href="/styles.css">
+  <script type="module" src="/app.js"></script>
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="/" aria-label="Rang en clair, accueil">
+      <span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span>
+      <span class="brand-name">rang<span>clair</span></span>
+    </a>
+    <div class="header-note"><span class="header-dot" aria-hidden="true"></span> Atelier de simulation sociale</div>
+  </header>
+
+  <aside class="truth-banner" role="note" aria-label="Avertissement sur la simulation">
+    <span class="truth-icon" aria-hidden="true">!</span>
+    <strong>Exemple fictif, résultat théorique.</strong>
+    <span>Cette page n’utilise aucun dossier réel et ne prédit aucune admission.</span>
+    <span class="truth-separator" aria-hidden="true">·</span>
+    <span>Elle est séparée de l’ordre d’appel Parcoursup.</span>
+  </aside>
+
+  <main id="main-content">
+    <section class="hero" aria-labelledby="page-title">
+      <div class="hero-copy">
+        <p class="eyebrow"><span class="eyebrow-index">01</span> Comprendre l’effet d’un paramètre</p>
+        <h1 id="page-title">Quand le contexte<br>pèse dans un <em>classement</em> ?</h1>
+        <p class="hero-lede">Faites varier un poids IPS et observez qui monte, qui descend, et ce qui change dans le groupe retenu — sur un exemple entièrement inventé.</p>
+      </div>
+      <aside class="hero-note" aria-label="À propos de cet outil">
+        <span class="note-rule" aria-hidden="true"></span>
+        <p>Ce simulateur rend une formule visible. Il ne répond pas à la question de savoir si cette formule est juste, souhaitée ou adaptée à Parcoursup.</p>
+        <span class="note-signature">LE RANG EN CLAIR <span>—</span> PROTOTYPE</span>
+      </aside>
+    </section>
+
+    <section class="control-deck" aria-labelledby="controls-title">
+      <div class="section-heading control-heading">
+        <span class="section-marker" aria-hidden="true">A</span>
+        <div>
+          <p class="eyebrow">À VOUS DE RÉGLER</p>
+          <h2 id="controls-title">Composer la comparaison</h2>
+        </div>
+      </div>
+      <div class="controls-layout">
+        <fieldset class="preset-fieldset">
+          <legend>Scénarios à afficher <span class="quiet-label">(0 % reste toujours visible comme repère)</span></legend>
+          <div id="preset-controls" class="weight-pills" role="group" aria-label="Choisir les scénarios repères"></div>
+          <p class="field-hint">Cliquez sur un pourcentage pour l’ajouter ou le retirer du comparatif.</p>
+        </fieldset>
+        <div class="custom-control">
+          <label for="custom-weight">Ajouter un poids personnalisé <output id="custom-weight-output" for="custom-weight">25 %</output></label>
+          <input id="custom-weight" type="range" min="0" max="40" step="1" value="25">
+          <div class="range-ends"><span>0 %</span><span>40 %</span></div>
+          <button id="add-custom-weight" class="text-button" type="button">Ajouter le scénario à 25 % <span aria-hidden="true">＋</span></button>
+        </div>
+        <div class="capacity-control">
+          <label for="capacity">Taille du groupe comparé <output id="capacity-output" for="capacity">Top 6</output></label>
+          <input id="capacity" type="range" min="1" max="12" step="1" value="6">
+          <div class="range-ends"><span>1 personne</span><span>12 personnes</span></div>
+          <p class="field-hint">Le top-k est une coupe de classement pour l’exercice, pas une liste d’admis·es.</p>
+        </div>
+      </div>
+      <p id="interaction-status" class="visually-hidden" aria-live="polite"></p>
+    </section>
+
+    <section class="scenario-section" aria-labelledby="scenario-title">
+      <div class="section-heading">
+        <span class="section-marker" aria-hidden="true">B</span>
+        <div>
+          <p class="eyebrow">VUE CÔTE À CÔTE</p>
+          <h2 id="scenario-title">Ce que racontent les scénarios</h2>
+        </div>
+        <p class="heading-aside">Sélectionnez une carte pour examiner le classement détaillé.</p>
+      </div>
+      <div id="scenario-cards" class="scenario-grid" aria-live="polite"></div>
+    </section>
+
+    <section class="visual-section" aria-labelledby="visual-title">
+      <div class="section-heading">
+        <span class="section-marker" aria-hidden="true">C</span>
+        <div>
+          <p class="eyebrow">LIRE LES DÉPLACEMENTS</p>
+          <h2 id="visual-title">Comparer les effets</h2>
+        </div>
+      </div>
+      <div class="visual-grid">
+        <article class="chart-panel average-panel" aria-labelledby="average-title">
+          <div class="panel-head">
+            <div>
+              <p class="eyebrow">INDICATEUR DESCRIPTIF</p>
+              <h3 id="average-title">IPS moyen du top-k</h3>
+            </div>
+            <span class="panel-index">01 / 02</span>
+          </div>
+          <p class="panel-intro">Moyenne des IPS des lycées fictifs du groupe affiché. Plus bas ne signifie pas, à lui seul, plus équitable.</p>
+          <div class="chart-axis" aria-hidden="true"><span>0</span><span>80</span><span>160 IPS</span></div>
+          <div id="average-chart" class="bar-chart" role="list" aria-label="IPS moyen par scénario, échelle fixe de 0 à 160"></div>
+        </article>
+
+        <article class="chart-panel movement-panel" aria-labelledby="movement-title">
+          <div class="panel-head">
+            <div>
+              <p class="eyebrow">SCÉNARIO EXAMINÉ</p>
+              <h3 id="movement-title">Qui change de rang ?</h3>
+            </div>
+            <span class="panel-index">02 / 02</span>
+          </div>
+          <label class="select-label" for="active-scenario">Rang simulé au poids</label>
+          <select id="active-scenario" aria-describedby="movement-help"></select>
+          <p id="movement-help" class="panel-intro">Écart par rapport au rang initial, calculé au mérite seul. Un nombre positif signifie que la place remonte.</p>
+          <div class="movement-legend"><span class="legend-up"><i aria-hidden="true"></i> remonte</span><span class="legend-down"><i aria-hidden="true"></i> descend</span></div>
+          <div id="movement-chart" class="movement-chart" role="list" aria-label="Déplacements de rang des candidat·es fictif·ves"></div>
+        </article>
+      </div>
+    </section>
+
+    <section class="table-section" aria-labelledby="table-title">
+      <div class="section-heading table-heading">
+        <span class="section-marker" aria-hidden="true">D</span>
+        <div>
+          <p class="eyebrow">LES 12 PROFILS FICTIFS</p>
+          <h2 id="table-title">Le détail, candidat·e par candidat·e</h2>
+        </div>
+        <p id="table-caption" class="heading-aside">Rang initial : ordre au mérite seul. Rang simulé : formule composite du scénario choisi.</p>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">Profil</th>
+              <th scope="col">Lycée fictif · IPS</th>
+              <th scope="col">Rang initial</th>
+              <th scope="col">Rang simulé</th>
+              <th scope="col">Évolution</th>
+              <th scope="col">Dans le top-k ?</th>
+            </tr>
+          </thead>
+          <tbody id="candidate-rows"></tbody>
+        </table>
+      </div>
+      <p class="table-footnote">Aucun nom, numéro UAI ou dossier réel n’est utilisé. Les profils F01–F12 sont des lignes de démonstration fabriquées.</p>
+    </section>
+
+    <section class="method-section" aria-labelledby="method-title">
+      <div class="method-stamp" aria-hidden="true">?</div>
+      <div class="method-content">
+        <p class="eyebrow">MODE D’EMPLOI</p>
+        <h2 id="method-title">Comment cette simulation fonctionne</h2>
+        <p>Cette visualisation reprend la mécanique du prototype de recherche : elle transforme le mérite et le contexte IPS du lycée en deux priorités relatives à l’échantillon, puis les combine.</p>
+        <details>
+          <summary>Voir la formule, les paramètres et les limites</summary>
+          <div class="method-details">
+            <p><strong>Formule :</strong> score = (1 − poids IPS) × percentile de mérite + poids IPS × priorité de contexte. Les valeurs par défaut sont 0 %, 20 % et 40 %; le curseur permet d’ajouter un poids entier entre 0 et 40 %.</p>
+            <p><strong>Priorité de contexte :</strong> un IPS de lycée plus bas reçoit ici une priorité plus élevée. L’IPS est une moyenne d’établissement, pas une caractéristique personnelle de l’élève.</p>
+            <p><strong>Égalités :</strong> les rangs percentiles moyens sont utilisés en cas d’égalité; à score composite égal, le mérite départage d’abord, puis l’identifiant fictif.</p>
+            <p><strong>Limites :</strong> les percentiles sont calculés dans ces 12 profils seulement. Le modèle ne représente ni les commissions de classement, ni les quotas boursier et géographique, ni les listes d’attente, désistements ou propositions quotidiennes. Une variation de rang ne constitue pas une preuve d’équité.</p>
+            <p><strong>Ce n’est pas l’algorithme de Parcoursup :</strong> cette page ne modifie aucun ordre d’appel et ne prédit ni une proposition ni une admission. Elle sert à rendre des hypothèses visibles pour pouvoir en discuter, notamment avec les lycéen·nes concerné·es.</p>
+          </div>
+        </details>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <span>Rang en clair <span class="footer-dot">·</span> prototype de visualisation</span>
+    <a href="#main-content">Retour au début ↑</a>
+  </footer>
+
+  <noscript><p class="noscript-message">Activez JavaScript pour utiliser les contrôles et visualiser les scénarios.</p></noscript>
+</body>
+</html>

@@ -52,6 +52,18 @@ Dans cet exemple seulement, le top 6 reste le même à 0 et 10 %. À 20 %, une p
 
 Le simulateur ne touche pas à `order_call.py`, ne calcule pas d’admissions Parcoursup et ne transforme pas l’IPS moyen du lycée en caractéristique individuelle. [Voir la formule, les hypothèses et les limites](docs/simulation-ponderation-progressive-ips.md).
 
+### Page interactive
+
+Une [visualisation web autonome](web/visualisation/README.md) permet de comparer plusieurs poids IPS côte à côte, de régler la taille du groupe fictif et de voir les rangs bouger dans un tableau et deux graphiques. Elle reprend les mêmes 12 profils inventés et la même formule que le simulateur Python. Elle reste séparée de l’ordre d’appel Parcoursup et ne prédit aucune admission.
+
+Pour la lancer depuis la racine du dépôt :
+
+```bash
+python3 -m http.server 8000 --bind 127.0.0.1 --directory web/visualisation
+```
+
+Puis ouvrir `http://127.0.0.1:8000/` dans un navigateur.
+
 ## Revendications et consultation
 
 Les sources publiques suffisent pour dégager des sujets importants — transparence, attente, accompagnement, capacité d’accueil, contraintes matérielles et équité sociale — mais elles ne suffisent pas pour choisir les poids d’une règle. Les baromètres ne portent que sur une partie des usagers; les reportages racontent des situations particulières; les revendications engagent les organisations qui les portent.
@@ -85,6 +97,7 @@ La [note sur l’IPS et le prototype](docs/prototype-ips-et-critere-social.md) p
 - [x] Étudier les limites d’un critère IPS et expliquer pourquoi REP/REP+ ne désigne pas une catégorie générale de lycées.
 - [x] Charger le snapshot DEPP 2025-2026 et créer un audit descriptif de l’IPS sans effet sur l’ordre d’appel.
 - [x] Créer une simulation de sensibilité à poids progressif sur un échantillon entièrement fictif, séparée de l’ordre d’appel.
+- [x] Créer une visualisation web interactive pour comparer les pondérations, les rangs et les indicateurs du même échantillon fictif.
 - [ ] Consulter directement des lycéen·nes aux parcours variés et intégrer leurs priorités choisies.
 - [x] Étendre le modèle au secteur géographique et comparer A5/A6 au code officiel épinglé.
 - [ ] Relier, sous un cadre autorisé, des données de candidatures aux contextes IPS pour étudier des résultats d’admission.
@@ -120,6 +133,7 @@ Les documents ci-dessous donnent davantage de détails; il n’est pas nécessai
 - [Témoignages, enquêtes, revendications et sources officielles](docs/retours-lyceen-ips-recherche.md) — ce qui ressort des sources, et ce qu’elles ne permettent pas de conclure.
 - [Audit descriptif IPS 2025-2026](docs/audit-descriptif-ips-2025-2026.md) — résultats calculés, méthode et limites.
 - [Simulation théorique d’une pondération progressive](docs/simulation-ponderation-progressive-ips.md) — formule, exemple fictif, commandes et garde-fous.
+- [Visualisation web interactive](web/visualisation/README.md) — comparaison des scénarios et lancement local de la page.
 - [Questionnaire de consultation à relire avant diffusion](docs/questionnaire-experiences-parcoursup.md) — questions, précautions d’anonymat et méthode de restitution.
 - [Intégrer l’IPS au prototype](docs/prototype-ips-et-critere-social.md) — options, données, simulations et tests à prévoir.
 - [Les revendications lycéennes et l’audit du cahier des charges](docs/revendications-et-audit-cahier-des-charges.md) — demandes publiques et points à clarifier.
