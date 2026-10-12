@@ -29,12 +29,12 @@ Certaines organisations lycéennes et étudiantes demandent aussi **plus de plac
 
 Ce dépôt contient un **petit prototype de recherche**, écrit en Python. Il compare :
 
-- une version simplifiée de l’ordre d’appel avec quota boursier seul;
+- une version simplifiée de l’ordre d’appel avec taux boursier et taux lié au secteur géographique;
 - une autre règle expérimentale, qui réserve une part des places aux candidat·es boursier·es avant de compléter le groupe selon le classement.
 
 Ces deux règles ne font pas exactement la même chose : la première produit un ordre d’appel; la seconde choisit un groupe de personnes. On ne peut donc pas remplacer l’une par l’autre sans définir le mécanisme complet.
 
-> **Ce prototype ne décide de l’admission de personne et ne reproduit pas toutes les règles de Parcoursup.** Il ne couvre pas encore les quotas liés au secteur géographique, les internats, ni tous les échanges quotidiens de propositions et de réponses. Les tests vérifient des exemples simplifiés; ils ne prouvent pas qu’une règle est juste pour l’ensemble des candidat·es.
+> **Ce prototype ne décide de l’admission de personne et ne reproduit pas toutes les règles de Parcoursup.** Il modélise un groupe de classement strict et les deux taux, mais pas les internats, les groupes multiples ni les échanges quotidiens de propositions et de réponses. Les tests comparent des exemples au code et aux documents officiels; ils ne prouvent pas qu’une règle est juste pour l’ensemble des candidat·es.
 
 ## Nos principes
 
@@ -50,9 +50,9 @@ Ces deux règles ne font pas exactement la même chose : la première produit un
 - [x] Créer un premier prototype et le comparer à des exemples officiels de l’ordre d’appel.
 - [x] Examiner les revendications publiques de lycéen·nes et les hypothèses du cahier des charges.
 - [x] Analyser le code public de l’ordre d’appel et des propositions quotidiennes.
-- [x] Ajouter des tests d’ordre exact pour un exemple du guide officiel et les démos A1 à A4.
+- [x] Ajouter des tests d’ordre exact pour l’exemple du guide à un taux, l’exemple à deux taux et les démos A1 à A6.
 - [ ] Recueillir directement les priorités de lycéen·nes aux parcours variés.
-- [ ] Étendre le modèle au secteur géographique, puis comparer aux démos A5 et A6 à deux taux.
+- [x] Étendre le modèle au secteur géographique et comparer A5/A6 au code officiel épinglé.
 - [ ] Ajouter un simulateur distinct des propositions quotidiennes.
 - [ ] Comparer les règles dans des simulations expliquées et reproductibles.
 
@@ -77,7 +77,7 @@ Les documents ci-dessous donnent davantage de détails; il n’est pas nécessai
 - [Les revendications lycéennes et l’audit du cahier des charges](docs/revendications-et-audit-cahier-des-charges.md) — ce qui est demandé et les points à clarifier.
 - [Analyse du code actuel et pistes d’amélioration](docs/analyse-algorithme-actuel-et-pistes.md) — explication plus technique du calcul de l’ordre d’appel et des propositions.
 - [Critères d’optimisation et co-conception](docs/criteres-optimisation-et-co-conception.md) — comment traduire les revendications en critères testables sans cacher les choix politiques.
-- [Plan des tests contre les références officielles](docs/plan-tests-validation-officiels.md) — ce qui est déjà testé et ce qui attend l’extension au taux géographique.
+- [Plan des tests contre les références officielles](docs/plan-tests-validation-officiels.md) — les exemples comparés, la provenance des sorties et les prochaines validations.
 - [Analyse initiale](docs/analyse-initiale.md) — premières conclusions, vérifications et questions ouvertes.
 
 ### Sources principales

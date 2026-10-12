@@ -1,26 +1,29 @@
-"""Prototypes simplifiés pour étudier les priorités boursiers de Parcoursup.
+"""Modèles simplifiés de l'ordre d'appel de groupes Parcoursup.
 
-Ce module ne reproduit ni tous les paramètres ni le code de production de
-Parcoursup. Il couvre uniquement le cas abstrait d'un classement strict et
- d'un taux minimum boursiers, sans taux de résidents ni internat.
+Le module traite un classement pédagogique strict, un taux minimum boursier
+et un taux minimum de candidat·es du secteur. Il ne reproduit pas les
+propositions quotidiennes, les groupes multiples ni les internats.
 """
 
 from __future__ import annotations
 
+from collections import deque
 from dataclasses import dataclass
 from fractions import Fraction
 from typing import Iterable, TypeAlias
 
 Rate: TypeAlias = Fraction | int | float | str
+ApplicantType: TypeAlias = tuple[bool, bool]
 
 
 @dataclass(frozen=True, slots=True)
 class Applicant:
-    """Candidat·e abstrait·e, avec priorité pédagogique stricte et statut social."""
+    """Candidat·e abstrait·e, avec rang, statut boursier et statut de secteur."""
 
     applicant_id: str
     rank: int
     scholarship_holder: bool
+    resident_of_sector: bool = False
 
 
 def _as_rate(rate: Rate) -> Fraction:
@@ -51,48 +54,100 @@ def _validated_applicants(applicants: Iterable[Applicant]) -> tuple[Applicant, .
         raise ValueError("Le classement doit être strict : les rangs doivent être uniques.")
     if any(not isinstance(person.scholarship_holder, bool) for person in people):
         raise ValueError("Le statut boursier doit être booléen.")
+    if any(not isinstance(person.resident_of_sector, bool) for person in people):
+        raise ValueError("Le statut de secteur doit être booléen.")
     return tuple(sorted(people, key=lambda person: person.rank))
+
+
+def _is_rate_binding(called: int, total_available: int, rate: Fraction, prefix_size: int) -> bool:
+    """Même comparaison exacte que dans le code officiel, sans arrondi flottant."""
+    return total_available > called and called * rate.denominator < rate.numerator * prefix_size
+
+
+def order_call_with_quotas(
+    applicants: Iterable[Applicant],
+    scholarship_rate: Rate,
+    sector_rate: Rate = 0,
+) -> tuple[Applicant, ...]:
+    """Construit l'ordre d'appel d'un groupe soumis aux deux taux minimum.
+
+    Les candidatures sont séparées en quatre files, triées par rang pédagogique :
+    boursier·e du secteur, boursier·e hors secteur, non-boursier·e du secteur,
+    non-boursier·e hors secteur. À chaque position, les taux encore réalisables
+    contraignent les profils autorisés. Si les deux contraintes s'appliquent et
+    qu'aucun profil ne peut satisfaire les deux, le meilleur rang boursier hors
+    secteur est appelé : c'est la priorité donnée au taux boursier dans ce cas.
+
+    Les taux sont des fractions entre 0 et 1 (par exemple 1/10 pour 10 %).
+    Cette fonction reproduit l'ordre d'appel documenté pour un groupe à
+    classement strict; elle ne calcule pas les propositions quotidiennes et ne
+    modélise ni groupes multiples ni internats.
+    """
+
+    people = _validated_applicants(applicants)
+    scholarship_quota = _as_rate(scholarship_rate)
+    sector_quota = _as_rate(sector_rate)
+
+    queues: dict[ApplicantType, deque[Applicant]] = {
+        (True, True): deque(),
+        (True, False): deque(),
+        (False, True): deque(),
+        (False, False): deque(),
+    }
+    for person in people:
+        queues[(person.scholarship_holder, person.resident_of_sector)].append(person)
+
+    total_scholars = sum(person.scholarship_holder for person in people)
+    total_sector = sum(person.resident_of_sector for person in people)
+    called_scholars = 0
+    called_sector = 0
+    result: list[Applicant] = []
+
+    while len(result) < len(people):
+        prefix_size = len(result) + 1
+        scholarship_binding = _is_rate_binding(
+            called_scholars, total_scholars, scholarship_quota, prefix_size
+        )
+        sector_binding = _is_rate_binding(
+            called_sector, total_sector, sector_quota, prefix_size
+        )
+
+        eligible_heads = [
+            queue[0]
+            for (is_scholar, is_sector), queue in queues.items()
+            if queue
+            and (is_scholar or not scholarship_binding)
+            and (is_sector or not sector_binding)
+        ]
+
+        if eligible_heads:
+            chosen = min(eligible_heads, key=lambda person: person.rank)
+        else:
+            # Si aucun profil ne respecte les deux taux, ceux-ci doivent être
+            # contraignants ensemble. Le code officiel donne alors priorité
+            # aux boursier·es hors secteur.
+            if not (scholarship_binding and sector_binding):
+                raise AssertionError("Aucun profil admissible hors situation de conflit des deux taux.")
+            scholarship_non_sector = queues[(True, False)]
+            if not scholarship_non_sector:
+                raise AssertionError("Le conflit des taux devrait laisser un·e boursier·e hors secteur.")
+            chosen = scholarship_non_sector[0]
+
+        queues[(chosen.scholarship_holder, chosen.resident_of_sector)].popleft()
+        result.append(chosen)
+        called_scholars += chosen.scholarship_holder
+        called_sector += chosen.resident_of_sector
+
+    return tuple(result)
+
+
+def prefix_quota_order(applicants: Iterable[Applicant], rate: Rate) -> tuple[Applicant, ...]:
+    """Compatibilité : ordre à quota boursier seul, sans taux de secteur."""
+    return order_call_with_quotas(applicants, scholarship_rate=rate, sector_rate=0)
 
 
 def _ceil_fraction(value: Fraction) -> int:
     return -(-value.numerator // value.denominator)
-
-
-def prefix_quota_order(applicants: Iterable[Applicant], rate: Rate) -> tuple[Applicant, ...]:
-    """Construit l'ordre d'appel du modèle officiel simplifié « taux boursier seul ».
-
-    À chaque rang, on prend le meilleur classement pédagogique disponible,
-    sauf si ce choix rendrait le taux minimum boursiers contraignant et qu'il
-    reste des candidat·es boursier·es : dans ce cas, on appelle le/la meilleur·e
-    boursier·e restant·e. C'est la règle de préfixe spécifiée pour le cas sans
-    taux de résidents; ce n'est pas une reproduction de toutes les variantes
-    Parcoursup (résidents, groupes, internats, etc.).
-    """
-
-    people = _validated_applicants(applicants)
-    quota_rate = _as_rate(rate)
-    remaining_scholars = [p for p in people if p.scholarship_holder]
-    remaining_others = [p for p in people if not p.scholarship_holder]
-    scholar_count = 0
-    result: list[Applicant] = []
-
-    for k in range(1, len(people) + 1):
-        required_scholars = _ceil_fraction(quota_rate * k)
-        quota_binding = scholar_count < required_scholars
-        if quota_binding and remaining_scholars:
-            chosen = remaining_scholars.pop(0)
-            scholar_count += 1
-        else:
-            candidates = [lst[0] for lst in (remaining_scholars, remaining_others) if lst]
-            chosen = min(candidates, key=lambda person: person.rank)
-            if chosen.scholarship_holder:
-                remaining_scholars.pop(0)
-                scholar_count += 1
-            else:
-                remaining_others.pop(0)
-        result.append(chosen)
-
-    return tuple(result)
 
 
 def choose_with_scholarship_reserve(
@@ -100,14 +155,9 @@ def choose_with_scholarship_reserve(
 ) -> tuple[Applicant, ...]:
     """Sélectionne un ensemble avec une réserve boursière libérée si inutilisée.
 
-    La réserve vaut ceil(capacity * rate). On choisit d'abord jusqu'à ce nombre
-    de boursier·es selon le classement strict, puis les meilleurs candidat·es
-    restants, quel que soit leur statut, jusqu'à remplir la capacité. Toute
-    place réservée non occupée faute de boursier·es est ainsi ouverte aux autres.
-
-    Le résultat est trié par rang pour faciliter la lecture, mais cet ordre ne
-    constitue PAS un nouvel ordre d'appel : la fonction renvoie un ensemble
-    choisi pour un ensemble donné de candidatures.
+    Cette fonction expérimentale ne traite que le statut boursier et ne tient
+    pas compte du secteur géographique. Elle renvoie un ensemble pour un ensemble
+    donné de candidatures, pas un ordre d'appel.
     """
 
     people = _validated_applicants(applicants)
@@ -116,10 +166,10 @@ def choose_with_scholarship_reserve(
         raise ValueError("La capacité doit être un entier positif ou nul.")
 
     reserve = _ceil_fraction(Fraction(capacity) * quota_rate)
-    scholars = [p for p in people if p.scholarship_holder]
+    scholars = [person for person in people if person.scholarship_holder]
     chosen_scholars = scholars[:reserve]
     chosen_ids = {person.applicant_id for person in chosen_scholars}
-    remaining = [p for p in people if p.applicant_id not in chosen_ids]
+    remaining = [person for person in people if person.applicant_id not in chosen_ids]
     general_seats = capacity - len(chosen_scholars)
     chosen = chosen_scholars + remaining[:general_seats]
     return tuple(sorted(chosen, key=lambda person: person.rank))

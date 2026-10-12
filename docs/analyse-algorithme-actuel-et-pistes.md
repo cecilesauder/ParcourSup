@@ -62,11 +62,11 @@ Organiser des ateliers avec des candidat·es aux parcours variés : formations s
 
 ## Ordre de travail proposé
 
-1. Figer la version du code public et écrire une suite de cas de référence, y compris les quatre profils et le conflit des taux.
-2. Reproduire fidèlement la règle actuelle d’ordre d’appel sur ces cas avant de prétendre la comparer.
-3. Compléter le modèle temporel de propositions et vérifier ses sorties sur des exemples du dépôt officiel.
-4. Tester avec des candidat·es la compréhension des rangs, des refus et des listes d’attente; transformer leurs priorités en critères mesurables.
-5. Seulement ensuite, comparer l’ordre actuel et les politiques alternatives, en publiant les hypothèses, résultats par groupe et incertitudes.
+1. [x] Figer la version du code public et écrire des cas de référence, y compris les quatre profils et le conflit des taux.
+2. [x] Reproduire la règle d’ordre d’appel d’un groupe strict à deux taux et la comparer aux exemples officiels disponibles. Cette validation ne couvre pas encore toutes les variantes de production.
+3. [ ] Compléter le modèle temporel de propositions et vérifier ses sorties sur des exemples du dépôt officiel.
+4. [ ] Tester avec des candidat·es la compréhension des rangs, des refus et des listes d’attente; transformer leurs priorités en critères mesurables.
+5. [ ] Seulement ensuite, comparer l’ordre actuel et les politiques alternatives, en publiant les hypothèses, résultats par groupe et incertitudes.
 
 ## Références
 

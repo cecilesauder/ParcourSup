@@ -1,0 +1,52 @@
+{
+  "official_repository_commit": "65273cd09ff12fa719ac3a0c8ca9ecbd8a1797d2",
+  "official_specification": "https://services.dgesip.fr/fichiers/presentation_algorithmes_parcoursup_2025_finale.pdf",
+  "reference_run": "Sorties A5 et A6 produites en exécutant GroupeClassement.java officiel à la révision épinglée, avec les entrées décrites par ExempleA5.java et ExempleA6.java.",
+  "cases": [
+    {
+      "id": "guide_4_2_deux_taux_conflit",
+      "source": "Présentation officielle 2025, section 4.2; ordre complet publié dans le document.",
+      "scholarship_rate": [1, 5],
+      "sector_rate": [9, 10],
+      "ranking": [
+        ["R1", false, true], ["R2", false, true], ["N1", false, false],
+        ["R3", false, true], ["R4", false, true], ["R5", false, true],
+        ["R6", false, true], ["R7", false, true], ["R8", false, true],
+        ["R9", false, true], ["R10", false, true], ["R11", false, true],
+        ["B1", true, false], ["R12", false, true], ["B2", true, false],
+        ["R13", false, true], ["R14", false, true], ["D1", true, true],
+        ["R15", false, true], ["R16", false, true]
+      ],
+      "expected_order": ["D1", "R1", "R2", "R3", "R4", "B1", "R5", "R6", "R7", "R8", "B2", "R9", "R10", "R11", "R12", "R13", "R14", "R15", "R16", "N1"],
+      "expected_basis": "Ordre explicitement publié dans la spécification officielle."
+    },
+    {
+      "id": "demo_A5",
+      "source": "src/main/java/fr/parcoursup/algos/bacasable/ordreappel/ExempleA5.java au commit officiel indiqué ci-dessus.",
+      "scholarship_rate": [1, 10],
+      "sector_rate": [19, 20],
+      "groups_by_rank_range": {
+        "boursier_du_secteur": [[1, 2], [21, 22], [41, 41]],
+        "boursier_hors_secteur": [[51, 51], [61, 61], [71, 71], [81, 81], [91, 91]],
+        "non_boursier_du_secteur": [[3, 19], [23, 39], [42, 50], [52, 60], [62, 70], [72, 80], [82, 90], [92, 100]],
+        "non_boursier_hors_secteur": [[20, 20], [40, 40]]
+      },
+      "expected_order": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100],
+      "expected_basis": "Sortie obtenue en exécutant la classe officielle GroupeClassement au commit épinglé avec l’entrée de la démo A5."
+    },
+    {
+      "id": "demo_A6",
+      "source": "src/main/java/fr/parcoursup/algos/bacasable/ordreappel/ExempleA6.java au commit officiel indiqué ci-dessus.",
+      "scholarship_rate": [1, 10],
+      "sector_rate": [19, 20],
+      "groups_by_rank_range": {
+        "boursier_du_secteur": [],
+        "boursier_hors_secteur": [[101, 111]],
+        "non_boursier_du_secteur": [[1, 100]],
+        "non_boursier_hors_secteur": []
+      },
+      "expected_order": [101, 1, 2, 3, 4, 5, 6, 7, 8, 9, 102, 10, 11, 12, 13, 14, 15, 16, 17, 18, 103, 19, 20, 21, 22, 23, 24, 25, 26, 27, 104, 28, 29, 30, 31, 32, 33, 34, 35, 36, 105, 37, 38, 39, 40, 41, 42, 43, 44, 45, 106, 46, 47, 48, 49, 50, 51, 52, 53, 54, 107, 55, 56, 57, 58, 59, 60, 61, 62, 63, 108, 64, 65, 66, 67, 68, 69, 70, 71, 72, 109, 73, 74, 75, 76, 77, 78, 79, 80, 81, 110, 82, 83, 84, 85, 86, 87, 88, 89, 90, 111, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100],
+      "expected_basis": "Sortie obtenue en exécutant la classe officielle GroupeClassement au commit épinglé avec l’entrée de la démo A6; illustre le conflit entre quotas au premier appel."
+    }
+  ]
+}

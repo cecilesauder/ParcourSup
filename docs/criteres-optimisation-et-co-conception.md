@@ -56,7 +56,7 @@ Si le nombre de places est inférieur au nombre de demandes, un mécanisme de pr
 
 ### Modèle A — reproduire l’ordre d’appel public
 
-C’est notre référence : coder en Python, indépendamment, les règles publiées pour les taux boursier et du secteur géographique, les personnes qui relèvent des deux catégories, l’arrondi, les cas où un vivier est épuisé et la priorité applicable lorsque les objectifs se contredisent. Comparer les sorties à des exemples officiels et aux tests du dépôt public.
+C’est notre référence : un premier modèle Python indépendant traite maintenant les deux taux, les quatre profils qui en résultent, les viviers épuisés et la priorité publiée lorsque les objectifs se contredisent. Ses sorties sont comparées à l’exemple à deux taux du guide et aux démonstrations A5/A6 exécutées avec le code officiel épinglé. Cela valide ce périmètre précis d’ordre d’appel, pas les propositions quotidiennes ni toutes les variantes de production.
 
 Cette étape ne vise pas à optimiser la politique. Elle nous assure que nous comparons une variante à une représentation compréhensible du système de référence, et non à un prototype trop simplifié. La minimalité des inversions donnée par la spécification dans le seul cas d’un quota boursier doit être conservée comme propriété de référence à vérifier, sans la généraliser aux autres cas. [3]
 

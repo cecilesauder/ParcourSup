@@ -1,74 +1,56 @@
 # Plan de tests comparés aux références officielles
 
-## Ce que les tests officiels vérifient aujourd’hui
+## Ce que vérifient les tests du dépôt officiel
 
-Nous avons lu les tests Java et les exemples du dépôt public sur la branche `master`, commit `65273cd09ff12fa719ac3a0c8ca9ecbd8a1797d2`.
+Les tests Java et exemples ont été examinés à la révision `65273cd09ff12fa719ac3a0c8ca9ecbd8a1797d2`.
 
 - `TestGroupeClassement` vérifie notamment les taux invalides, la sortie vide et le tri des rangs. Son exemple aléatoire ne compare pas un ordre complet attendu.
 - `TestAlgoOrdreAppel` construit deux petits groupes sans quota et vérifie que les contrôles de sortie ne lèvent pas d’erreur.
-- `TestDemoOrdreAppel` exécute les exemples déterministes A1 à A6, mais ne compare pas explicitement la liste de sortie à une liste attendue.
-- Les démonstrations A5/A6 couvrent les taux boursier et du secteur simultanément; notre prototype actuel ne sait pas encore traiter ce second taux.
+- `TestDemoOrdreAppel` lance les démonstrations A1 à A6, mais n’affirme pas les ordres complets par des assertions.
 
-Il est donc important de ne pas qualifier chaque sortie d’A1 à A6 d’« ordre attendu affirmé par un test officiel ». Le code officiel fournit les entrées des démos; la spécification 2025 fournit une sortie complète pour son propre exemple à 25 %. [1] [2]
+Le dépôt officiel fournit donc des entrées très utiles pour des tests de comparaison, mais il faut distinguer ses tests automatisés des sorties de référence que nous avons enregistrées nous-mêmes. [1] [2]
 
-## Tests ajoutés maintenant : quota boursier seul
+## Références à un taux boursier
 
-`tests/fixtures/official_order_call_examples.json` conserve les identifiants des cas, leurs entrées, leurs sources et l’origine de la sortie attendue. `tests/test_official_order_call_examples.py` compare ensuite la sortie entière du prototype à la liste fixe du fixture.
+Le fichier `tests/fixtures/official_order_call_examples.json` conserve les entrées et sorties, avec la source de chacune. `tests/test_official_order_call_examples.py` compare l’ordre complet.
 
-- **Exemple explicite du guide, taux de 25 %.** Les vingt personnes sont fournies dans l’ordre pédagogique. Le guide publie l’ordre d’appel exact : `B1, C1, C2, C3, B2, C4, C5, C6, B3, C7, …, C17`. C’est le meilleur test-oracle disponible pour l’instant, car l’entrée et la sortie apparaissent toutes deux dans la spécification officielle.
-- **Démonstration A1, taux de 20 %.** Huit personnes, dont deux boursier·es classé·es 6e et 7e. Le fixture compare l’ordre complet, y compris le moment où le deuxième profil boursier doit remonter.
-- **Démonstration A2, taux de 2 %.** Une seule personne boursière, classée 6e. Le cas vérifie qu’une faible proportion peut néanmoins imposer le premier appel lorsque le préfixe commence.
-- **Démonstration A4, taux de 10 %.** Trois personnes boursières en positions 2, 3 et 8 parmi dix personnes. Le test vérifie que les candidat·es remontent uniquement quand le quota est contraignant, et que le classement pédagogique est autrement conservé.
-- **Démonstration A3, 1 000 personnes, taux de 10 %.** Test à grande taille : 900 personnes non boursières précèdent les 100 personnes boursières. La sortie attendue est construite selon le motif annoncé par la règle : une personne boursière, puis neuf personnes dans l’ordre pédagogique, tant qu’il reste des boursier·es. Le test compare l’ordre complet, pas seulement le premier appel.
+- **Guide officiel, taux de 25 %.** Le document publie l’entrée et l’ordre d’appel exact : `B1, C1, C2, C3, B2, C4, C5, C6, B3, C7, …, C17`. C’est une sortie officiellement publiée.
+- **Démonstrations A1, A2 et A4.** Ces cas testent respectivement des taux de 20 %, 2 % et 10 %. Les sorties exactes sont enregistrées selon la règle du guide; le JUnit officiel ne les affirme pas par une assertion.
+- **Démonstration A3.** Le test couvre les 1 000 candidatures du cas public à 10 %. Il vérifie l’ordre complet, pas seulement le nombre de personnes boursières.
 
-Les sorties A1/A2/A4/A3 sont figées ici comme sorties de référence **calculées d’après la spécification** et les entrées des démos. Contrairement au cas à 25 %, les tests JUnit de démonstration du dépôt officiel n’assertent pas ces listes exactes. Avant d’appeler ces fixtures « sorties de l’exécutable officiel », il faudra lancer le programme Java officiel sur les entrées et consigner la version et les résultats.
+## Références à deux taux : bourse et secteur
 
-## Propriétés générales à compléter
+Le prototype prend maintenant en compte les quatre profils possibles : boursier·e du secteur, boursier·e hors secteur, non-boursier·e du secteur et non-boursier·e hors secteur. La fonction `order_call_with_quotas` sélectionne à chaque étape le meilleur rang parmi les profils admissibles. Si les deux taux sont contraignants et qu’aucun profil ne peut satisfaire les deux, elle applique la priorité boursière prévue par le code public.
 
-Au-delà des exemples fixes, chaque ordre calculé doit satisfaire les invariants suivants :
+`tests/fixtures/official_two_rate_examples.json` et `tests/test_official_two_rate_examples.py` couvrent trois références :
 
-- chaque candidat·e d’entrée apparaît exactement une fois en sortie;
-- la liste ne perd ni n’ajoute de personne;
-- si le taux est nul, l’ordre d’appel égale le classement pédagogique;
-- lorsqu’un taux est contraignant et qu’il reste des candidat·es boursier·es, le prochain appel est boursier·e;
-- à chaque préfixe, le minimum boursier annoncé est atteint, sauf si le vivier boursier est épuisé;
-- un taux à 100 % appelle d’abord tous les boursier·es disponibles;
-- l’ordre d’entrée mélangé ne change pas la sortie, puisque le rang et le statut sont les données déterminantes;
-- les taux hors intervalle, rangs non positifs ou dupliqués, et identifiants dupliqués sont rejetés.
+- **Exemple du guide à deux taux.** Le guide publie l’ordre complet pour 20 % de boursier·es et 90 % de candidat·es du secteur. Le cas montre notamment une personne boursière du secteur appelée en premier, puis des profils intercalés, avec la personne non-boursière hors secteur appelée en dernier.
+- **Démonstration officielle A5.** La sortie de `GroupeClassement` est le classement d’origine `1, 2, …, 100`. Les profils boursier·e et secteur se recouvrent. Le test s’assure qu’une personne qui satisfait les deux critères apparaît une seule fois.
+- **Démonstration officielle A6.** Les personnes du secteur ont les rangs 1 à 100 et les personnes boursières hors secteur les rangs 101 à 111. Avec 10 % de boursier·es et 95 % du secteur, l’ordre de référence commence par la personne 101, puis les personnes 1 à 9, puis 102, puis 10 à 18, et ainsi de suite. Le test vérifie l’ordre complet et le conflit des deux taux dès le premier appel.
 
-Les propriétés dites « de chaque préfixe » doivent être testées pour toute position, y compris la dernière et le cas où il n’y a plus de personne boursière à appeler. Ne pas vérifier uniquement le nombre global de boursier·es dans toute la liste.
+Les sorties A5/A6 du fixture ont été obtenues en exécutant la classe Java officielle `GroupeClassement.calculerOrdreAppel` de la révision épinglée, à partir des entrées définies dans les classes de démonstration A5/A6. Les blobs exécutés ont été vérifiés contre le commit indiqué dans le fixture. Elles sont donc des **sorties de référence du code officiel**, et non des sorties explicitement imprimées dans le guide ni des assertions déjà présentes dans le JUnit amont. [2] [3] [4] [5] Le cas du guide à deux taux, lui, a une sortie explicitement publiée et a également été comparé au calcul Java officiel. [1] [3]
 
-## Suite à ajouter après l’extension aux deux taux
+## Garanties vérifiées et limites
 
-Une fois le taux de secteur géographique implémenté, ajouter des fixtures pour les démonstrations officielles A5 et A6. Elles doivent représenter explicitement quatre profils possibles : boursier·e du secteur, boursier·e hors secteur, non-boursier·e du secteur et non-boursier·e hors secteur.
+Les tests comparent les listes entières pour les exemples de référence. Ils vérifient également l’absence de doublons, les taux invalides, le statut de secteur invalide, le recouvrement des critères dans A5 et l’indépendance au désordre des données d’entrée dans A6. Les anciens tests continuent de vérifier le taux boursier seul et la règle expérimentale de réserve.
 
-Les tests à prévoir pour A5/A6 sont :
+Cela valide uniquement un groupe de classement à rangs stricts avec les deux taux. Le prototype ne modélise pas encore les internats, les groupes multiples, les places disponibles ni les propositions et réponses quotidiennes. Les résultats de conformité de l’ordre d’appel ne démontrent pas que les résultats seraient équitables pour l’ensemble des candidat·es.
 
-1. comparer l’ordre complet au résultat obtenu en exécutant le code officiel à la révision épinglée;
-2. tester les situations où les deux taux sont contraignants et où les objectifs ne peuvent pas être respectés ensemble;
-3. vérifier la priorité donnée au critère boursier dans le conflit prévu par la spécification;
-4. vérifier la garantie du taux résident tel que précisément formulé dans la spécification — ne pas le remplacer par un simple quota de sièges indépendant;
-5. tester les deux catégories qui se chevauchent et des réserves de personnes épuisées;
-6. tester l’arrondi aux entiers supérieurs, les taux nuls et 100 %, le vivier vide et les rangs mélangés.
+Il reste utile d’ajouter des tests exhaustifs sur des petits ensembles couvrant toutes les combinaisons de profils, et des tests de frontière pour les taux nuls et maximaux, les viviers épuisés et les contraintes qui deviennent inatteignables. Les critères de réussite de ces tests doivent suivre exactement les propriétés de la spécification, surtout pour le taux du secteur; il ne faut pas le traiter automatiquement comme un quota indépendant de sièges.
 
-Les attentes complètes A5/A6 devront être générées avec le moteur officiel indépendant, et archivées avec les entrées, l’identifiant du commit, la commande d’exécution et un commentaire lisible. Si la sortie officielle n’est pas explicitement imprimée dans le document, la fixture devra être nommée « sortie de référence du commit … », pas « résultat publié dans le guide ».
+## Tests distincts à ajouter pour les propositions quotidiennes
 
-## Tests distincts pour les propositions quotidiennes
+Le prototype d’ordre d’appel ne simule pas les propositions journalières. Quand cette deuxième partie sera créée, sa suite devra tester séparément :
 
-Le prototype d’ordre d’appel ne simule pas les propositions journalières. Il ne faut donc pas conclure à la conformité du moteur entier après les tests précédents. Quand cette deuxième partie sera créée, ses fixtures devront tester séparément :
+- l’ouverture par rang limite d’appel et le nombre de recrutements souhaité;
+- plusieurs formations et propositions simultanées;
+- les réponses positives ou négatives, les maintiens en attente et les places libérées;
+- les démissions automatiques, leur calendrier et les éventuelles règles d’internat;
+- la cohérence de chaque statut avant et après une journée simulée.
 
-- ouverture par rang limite d’appel;
-- envoi jusqu’au nombre de recrutements souhaité;
-- propositions simultanées et plusieurs formations;
-- réponse positive/négative, maintien en attente et libération d’une place;
-- démission automatique des vœux moins préférés si le répondeur correspondant est activé;
-- début/fin d’application des démissions automatiques selon la date;
-- cas avec internat et réduction de barre pour ne pas dépasser la capacité;
-- validité de chaque statut avant/après une journée simulée.
+Il faudra comparer ces sorties aux cas unitaires et exemples du moteur officiel de propositions. Un modèle de Gale–Shapley, s’il est étudié, restera un scénario théorique distinct et ne remplacera pas cette référence sans adaptation.
 
-Le résultat de ces tests pourrait être comparé aux cas unitaires et exemples du moteur officiel de propositions. Un modèle Gale–Shapley, s’il est étudié, aura ses propres tests et restera un scénario alternatif, pas une comparaison directe du code quotidien actuel.
-
-## Exécution
+## Lancer les tests
 
 ```bash
 python -m unittest discover -s tests -v
@@ -76,6 +58,12 @@ python -m unittest discover -s tests -v
 
 ## Références
 
-[1]: https://services.dgesip.fr/fichiers/presentation_algorithmes_parcoursup_2025_finale.pdf "MESR, présentation des algorithmes de Parcoursup, section 4.1 et exemple à 25 %"
+[1]: https://services.dgesip.fr/fichiers/presentation_algorithmes_parcoursup_2025_finale.pdf "MESR, présentation des algorithmes de Parcoursup, exemples à un et deux taux"
 
-[2]: https://gitlab.mim-libre.fr/parcoursup/algorithmes-de-parcoursup "Dépôt public des algorithmes de Parcoursup, exemples A1–A6 et tests Java"
+[2]: https://gitlab.mim-libre.fr/parcoursup/algorithmes-de-parcoursup/-/blob/65273cd09ff12fa719ac3a0c8ca9ecbd8a1797d2/src/test/java/fr/parcoursup/algos/ordreappel/exemples/TestDemoOrdreAppel.java "Test Java officiel qui exécute les démonstrations A1–A6"
+
+[3]: https://gitlab.mim-libre.fr/parcoursup/algorithmes-de-parcoursup/-/blob/65273cd09ff12fa719ac3a0c8ca9ecbd8a1797d2/src/main/java/fr/parcoursup/algos/ordreappel/algo/GroupeClassement.java "Code officiel de calcul de l’ordre d’appel par groupe"
+
+[4]: https://gitlab.mim-libre.fr/parcoursup/algorithmes-de-parcoursup/-/blob/65273cd09ff12fa719ac3a0c8ca9ecbd8a1797d2/src/main/java/fr/parcoursup/algos/bacasable/ordreappel/ExempleA5.java "Entrée de la démonstration officielle A5"
+
+[5]: https://gitlab.mim-libre.fr/parcoursup/algorithmes-de-parcoursup/-/blob/65273cd09ff12fa719ac3a0c8ca9ecbd8a1797d2/src/main/java/fr/parcoursup/algos/bacasable/ordreappel/ExempleA6.java "Entrée de la démonstration officielle A6"
