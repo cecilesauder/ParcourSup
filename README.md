@@ -36,6 +36,14 @@ Ces règles ne font pas exactement la même chose : la première produit un ordr
 
 > **Ce prototype ne décide de l’admission de personne et ne reproduit pas toutes les règles de Parcoursup.** Il modélise un groupe de classement strict et deux taux, mais pas les internats, les groupes multiples ni les échanges quotidiens de propositions et de réponses. Les tests comparent des exemples au code et aux documents officiels; ils ne prouvent pas qu’une règle est juste pour l’ensemble des candidat·es.
 
+## Audit IPS : descriptif seulement
+
+Nous avons ajouté au dépôt le snapshot officiel de la DEPP pour la rentrée **2025-2026**, portant sur **3 662 lycées**. L’audit calcule des statistiques par établissement, sans pondération par le nombre d’élèves. La médiane de l’IPS d’établissement est de **100,30** dans le public et **119,50** dans le privé sous contrat; par type de lycée, elle est de **119,75** pour les LEGT, **90,20** pour les LP et **104,05** pour les LPO.
+
+Ces chiffres décrivent les établissements, pas leurs élèves ni leurs chances d’admission. Nous n’avons pas de données de candidatures reliées au lycée d’origine; nous ne prétendons donc pas mesurer l’effet de l’IPS sur une admission. **L’IPS n’est pas transmis au calcul de l’ordre d’appel et ne change aucun rang.** [Lire l’audit et ses limites](docs/audit-descriptif-ips-2025-2026.md).
+
+Les données sont agrégées, proviennent du jeu officiel de la DEPP et sont sous Licence Ouverte Etalab 2.0 selon le portail. [Lire les informations sur le snapshot et sa mise à jour](data/README.md).
+
 ## Revendications et consultation
 
 Les sources publiques suffisent pour dégager des sujets importants — transparence, attente, accompagnement, capacité d’accueil, contraintes matérielles et équité sociale — mais elles ne suffisent pas pour choisir les poids d’une règle. Les baromètres ne portent que sur une partie des usagers; les reportages racontent des situations particulières; les revendications engagent les organisations qui les portent.
@@ -44,9 +52,9 @@ Un [brouillon de questionnaire de consultation](docs/questionnaire-experiences-p
 
 ## IPS et critère social : notre prudence
 
-La piste la plus utile à tester d’abord est de comparer les résultats par **contexte IPS du lycée d’origine**, sans modifier les admissions. La moyenne du lycée ne décrit pas la situation de chaque élève. Les REP/REP+ désignent des réseaux d’écoles et de collèges, pas une catégorie générale de lycées : nous ne créerons donc pas automatiquement une « priorité lycée REP ».
+La première étape choisie est de décrire le contexte IPS des lycées, sans modifier les admissions. La moyenne du lycée ne décrit pas la situation de chaque élève. Les REP/REP+ désignent des réseaux d’écoles et de collèges, pas une catégorie générale de lycées : nous ne créons donc pas automatiquement une « priorité lycée REP ».
 
-La [note sur l’IPS et le prototype](docs/prototype-ips-et-critere-social.md) propose de commencer par un audit descriptif, puis de ne simuler une priorité contextuelle qu’avec des paramètres explicites, après discussion avec les lycéen·nes et vérification du cadre applicable. **Aucun nouveau critère IPS n’a encore été ajouté au code.**
+La [note sur l’IPS et le prototype](docs/prototype-ips-et-critere-social.md) présente les options futures. Une éventuelle simulation de priorité contextuelle resterait séparée de l’algorithme actuel et demanderait des choix explicites, une consultation des lycéen·nes et une vérification du cadre applicable.
 
 ## Nos principes
 
@@ -67,24 +75,32 @@ La [note sur l’IPS et le prototype](docs/prototype-ips-et-critere-social.md) p
 - [x] Recueillir des témoignages publiés, vérifier des enquêtes et distinguer les revendications collectives.
 - [x] Préparer un questionnaire à relire avec les personnes concernées avant diffusion.
 - [x] Étudier les limites d’un critère IPS et expliquer pourquoi REP/REP+ ne désigne pas une catégorie générale de lycées.
+- [x] Charger le snapshot DEPP 2025-2026 et créer un audit descriptif de l’IPS sans effet sur l’ordre d’appel.
 - [ ] Consulter directement des lycéen·nes aux parcours variés et intégrer leurs priorités choisies.
 - [x] Étendre le modèle au secteur géographique et comparer A5/A6 au code officiel épinglé.
-- [ ] Ajouter une analyse descriptive des résultats selon le contexte IPS, sans effet sur l’ordre d’appel.
+- [ ] Relier, sous un cadre autorisé, des données de candidatures aux contextes IPS pour étudier des résultats d’admission.
 - [ ] Ajouter un simulateur distinct des propositions quotidiennes.
 - [ ] Comparer les règles dans des simulations expliquées et reproductibles.
 
-## Lancer les tests
+## Lancer les tests et l’audit
 
 Il faut Python 3.10 ou une version plus récente. Aucune bibliothèque supplémentaire n’est nécessaire.
 
 ```bash
 python -m unittest discover -s tests -v
+PYTHONPATH=. python examples/audit_ips.py
 ```
 
-Pour voir un exemple de comparaison :
+Pour voir l’exemple de comparaison des règles actuelles :
 
 ```bash
 PYTHONPATH=. python examples/compare_policies.py
+```
+
+Pour télécharger un snapshot officiel plus récent, en précisant la rentrée :
+
+```bash
+python scripts/telecharger_ips.py --rentree 2025-2026
 ```
 
 ## Pour aller plus loin
@@ -92,6 +108,7 @@ PYTHONPATH=. python examples/compare_policies.py
 Les documents ci-dessous donnent davantage de détails; il n’est pas nécessaire de les lire pour comprendre l’objectif général du projet.
 
 - [Témoignages, enquêtes, revendications et sources officielles](docs/retours-lyceen-ips-recherche.md) — ce qui ressort des sources, et ce qu’elles ne permettent pas de conclure.
+- [Audit descriptif IPS 2025-2026](docs/audit-descriptif-ips-2025-2026.md) — résultats calculés, méthode et limites.
 - [Questionnaire de consultation à relire avant diffusion](docs/questionnaire-experiences-parcoursup.md) — questions, précautions d’anonymat et méthode de restitution.
 - [Intégrer l’IPS au prototype](docs/prototype-ips-et-critere-social.md) — options, données, simulations et tests à prévoir.
 - [Les revendications lycéennes et l’audit du cahier des charges](docs/revendications-et-audit-cahier-des-charges.md) — demandes publiques et points à clarifier.

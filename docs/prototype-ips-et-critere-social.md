@@ -4,7 +4,7 @@
 
 **Ne pas créer de catégorie « lycée REP » et ne pas attribuer l’IPS du lycée comme si c’était l’IPS personnel d’un·e candidat·e.** Les REP/REP+ sont des réseaux formés d’écoles et d’un collège; ils ne constituent pas une étiquette générale des lycées [1]. L’IPS publié par la DEPP est une moyenne de lycée ou de voie, c’est-à-dire un indicateur de contexte agrégé, pas le profil social de chaque élève [2][3].
 
-La première étape devrait être un **audit descriptif sans effet sur l’ordre d’appel** : charger une version millésimée des données IPS, puis vérifier comment les résultats simulés se répartissent selon le contexte des lycées d’origine. Ensuite seulement, on pourrait comparer des scénarios de priorité contextuelle, avec des paramètres explicites, à la règle de base et aux critères individuels déjà présents.
+Le premier **audit descriptif sans effet sur l’ordre d’appel** est maintenant réalisé sur le snapshot DEPP 2025-2026. Il décrit la distribution des IPS par lycée, secteur et type. Il ne mesure pas les résultats d’admission, car le jeu officiel ne contient aucune donnée de candidature reliée à un UAI. Le rapport et la commande de reproduction sont dans [l’audit descriptif 2025-2026](audit-descriptif-ips-2025-2026.md).
 
 Cela permet d’étudier la question sociale sans décider à la place des lycéen·nes du poids à accorder à chaque critère. Le prototype n’est pas une règle officielle et cette note ne constitue pas un avis juridique.
 
@@ -65,13 +65,15 @@ Règles de traitement à fixer avant le chargement :
 
 ## Plan recommandé pour la suite du prototype
 
-### Étape 1 — Importer et documenter, sans effet sur les admissions
+### Étape 1 — Import et documentation : réalisés
 
-Créer un petit adaptateur pour le jeu de données public, ou d’abord une fixture miniature versionnée. Vérifier les colonnes, les UAI, les voies, les millésimes, les valeurs manquantes et les règles de masquage. Ne conserver que les données agrégées nécessaires.
+Le dépôt contient un extrait officiel DEPP de la rentrée 2025-2026, le script qui permet de le retélécharger et un module qui vérifie les colonnes, les UAI, le millésime et les valeurs absentes. Les 3 662 lignes portent sur des établissements; aucune valeur n’est ajoutée au dossier individuel d’un·e candidat·e.
 
-### Étape 2 — Produire un audit de référence
+### Étape 2 — Décrire les établissements : réalisée
 
-Sur des cas synthétiques ou des données autorisées, calculer les résultats de la règle actuelle et les présenter par contexte IPS, voie, bourse et secteur. Publier les dénominateurs, les groupes absents, les écarts d’ordre et les limites. **Aucun rang ne change à cette étape.**
+Les distributions par établissement, secteur, type de lycée et voie sont publiées dans [l’audit descriptif](audit-descriptif-ips-2025-2026.md). Chaque établissement compte une fois, sans pondération par le nombre d’élèves. **Aucun rang ne change.** Cet audit ne permet pas de conclure sur les chances d’admission.
+
+Pour comparer ultérieurement les résultats d’admission selon le contexte IPS, il faudra disposer de données de candidatures et d’issues reliées de manière autorisée et suffisamment protégée au lycée d’origine. Ces données ne sont pas dans le jeu DEPP public; aucune conclusion sur les admissions n’est donc simulée ici.
 
 ### Étape 3 — Comparer des scénarios explicitement paramétrés
 
@@ -85,21 +87,15 @@ Si les ateliers/questionnaire concluent qu’une mesure contextuelle mérite un 
 
 Ne pas adopter de taux ou seuils définitifs avant d’avoir consulté des lycéen·nes aux parcours variés et vérifié le cadre juridique applicable.
 
-## Tests à prévoir
+## Tests réalisés et validations encore nécessaires
 
-1. **Neutralité de la métadonnée :** ajouter ou retirer l’IPS dans le mode audit ne modifie jamais l’ordre d’appel courant; les exemples officiels A5/A6 continuent de passer.
-2. **Provenance :** une jointure UAI/année/voie sélectionne le bon millésime; aucun appariement par nom approximatif.
-3. **Donnée absente :** IPS masqué ou inconnu ne pénalise pas le ou la candidat·e; le cas est rapporté séparément.
-4. **Pas de confusion individuel/agrégé :** les sorties disent « IPS moyen du lycée/de la voie », jamais « position sociale de la personne ».
-5. **Robustesse aux frontières :** tester les valeurs autour du seuil du scénario, les arrondis et des écarts inférieurs ou égaux à trois points; ces petits écarts ne doivent pas être présentés comme des différences sociales certaines.
-6. **Effets croisés :** couvrir toutes les intersections bourse × secteur × contexte, y compris des cas où les trois objectifs ne peuvent pas être satisfaits simultanément.
-7. **Faisabilité :** aucun taux cible ne dépasse le nombre de personnes admissibles dans le groupe; l’impossibilité est explicite.
-8. **Explicabilité :** pour chaque candidat·e déplacé·e dans un scénario, fournir un journal lisible indiquant quel paramètre a changé l’ordre et pourquoi.
-9. **Non-régression :** les tests et fixtures de référence officiels déjà existants restent inchangés pour le mode actuel.
+Les nouveaux tests vérifient le millésime et le nombre d’UAI du snapshot, la présence d’une valeur IPS absente, les statistiques attendues, le traitement des champs manquants, le rejet des doublons et des valeurs illisibles, ainsi que l’absence de changement de l’ordre d’appel lorsqu’on exécute l’audit. Les tests officiels A5/A6 et tous les tests déjà présents passent également.
+
+Avant toute simulation qui influencerait des appels, il restera à vérifier une jointure UAI/année/voie sur des données de candidature autorisées, le traitement des données absentes, les seuils de groupe, les effets croisés bourse × secteur × contexte, la faisabilité, la sensibilité autour des seuils et l’explication lisible de chaque déplacement. Ces choix ne sont pas codés dans la branche actuelle.
 
 ## Décision à prendre avant toute modification de l’ordre d’appel
 
-La proposition recommandée est : **commencer par l’Option A**, intégrer l’IPS comme donnée agrégée de contexte uniquement pour auditer les résultats, puis décider avec les lycéen·nes si l’Option B mérite une simulation séparée. L’Option C n’est pas recommandée à ce stade. Le choix entre un indicateur de contexte, un critère individuel et un mécanisme sans bonus d’admission change matériellement la règle : il ne doit pas être décidé par défaut dans le code.
+L’Option A a été mise en place : le projet calcule maintenant un audit descriptif reproductible, séparé du moteur d’ordre d’appel. L’Option B reste une éventuelle simulation à part, à discuter avec des lycéen·nes avant de choisir un seuil ou un taux. L’Option C n’est pas recommandée à ce stade. Aucun bonus d’admission n’est codé et l’IPS n’est pas utilisé comme statut individuel.
 
 ## Sources
 
