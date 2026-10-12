@@ -74,6 +74,7 @@ Les documents ci-dessous donnent davantage de détails; il n’est pas nécessai
 
 - [Les revendications lycéennes et l’audit du cahier des charges](docs/revendications-et-audit-cahier-des-charges.md) — ce qui est demandé et les points à clarifier.
 - [Analyse du code actuel et pistes d’amélioration](docs/analyse-algorithme-actuel-et-pistes.md) — explication plus technique du calcul de l’ordre d’appel et des propositions.
+- [Critères d’optimisation et co-conception](docs/criteres-optimisation-et-co-conception.md) — comment traduire les revendications en critères testables sans cacher les choix politiques.
 - [Analyse initiale](docs/analyse-initiale.md) — premières conclusions, vérifications et questions ouvertes.
 
 ### Sources principales
