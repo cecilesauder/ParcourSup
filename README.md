@@ -24,6 +24,7 @@ Le saut au premier rang d’appel lorsqu’un quota est contraignant est une con
 - [x] Analyse initiale des affirmations et des sources officielles.
 - [x] Prototype du cas « quota boursiers seul » et de la fonction expérimentale à réserve.
 - [x] Tests unitaires et vérification exhaustive de la substituabilité sur de petits ensembles.
+- [x] Synthèse des revendications publiques de lycéen·nes et audit du cahier des charges transmis.
 - [ ] Recueillir et documenter les revendications exprimées directement par les lycéen·nes.
 - [ ] Définir des critères de réussite compréhensibles par les candidat·es : lisibilité, rangs vécus, délais mesurés, résultats par groupe.
 - [ ] Étendre le modèle aux taux résidents, aux règles de capacité et au calcul quotidien des propositions.
@@ -51,3 +52,5 @@ PYTHONPATH=. python examples/compare_policies.py
 - [Hafalir, Yenmez et Yildirim (2013), *Effective Affirmative Action in School Choice*](https://www.econometricsociety.org/publications/theoretical-economics/lookup/paper/8775) — modèle académique de réserves minoritaires et choix substituable dans son cadre.
 
 Voir [l’analyse initiale](docs/analyse-initiale.md) pour le périmètre, les corrections apportées aux hypothèses de départ et les questions ouvertes.
+
+Voir aussi [les revendications lycéennes et l’audit du cahier des charges](docs/revendications-et-audit-cahier-des-charges.md), qui distingue les demandes d’accès et de capacité des pistes de réforme algorithmique.

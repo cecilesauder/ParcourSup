@@ -18,7 +18,7 @@ Dans l’exemple artificiel à quatre personnes avec un taux de 25 %, si la pers
 
 Cette chaîne causale n’est pas démontrée par les notes de départ. La proposition « une personne peut recevoir plusieurs propositions de formations différentes » est plausible dans un système de vœux multiples, mais elle ne prouve pas que l’ordre d’appel provoque une rétention artificielle ou retarde mécaniquement la convergence. La documentation officielle décrit un flux continu de propositions et des appels quotidiens tenant compte des réponses précédentes et des paramètres propres aux formations. Pour attribuer une part des délais à l’ordre d’appel, il faudrait un modèle complet et des mesures comparatives qui isolent ces facteurs. [2]
 
-Le chiffre de 84 % évoqué dans les notes n’est pas repris ici : la source, la date, la question posée et la population sondée n’ont pas été fournies, donc il reste à sourcer avant toute publication.
+Le chiffre de stress des notes est désormais sourcé, mais le baromètre primaire de l’Institut CSA donne **83 %** (et non 84 %) en 2025. Le questionnaire en ligne a été rempli du 28 août au 4 septembre par 1 005 néo-bachelier·es inscrit·es sur Parcoursup, admis·es ou non, à partir d’adresses fournies par le ministère. À la question sur les adjectifs correspondant à la procédure, 53 % répondent « transparente » et 34 % « juste, qui traite tous les candidats de manière équitable ». Ce sont des opinions déclarées par cette cohorte, pas une preuve que l’algorithme produit le stress ou les délais. [5]
 
 ### Réserve à la capacité d’accueil
 
@@ -56,3 +56,5 @@ Le dépôt devra consigner la méthode de consultation, ses limites et la maniè
 [3] [P. Castéran, *Vérification de l’algorithme de calcul des ordres d’appel…*](https://hal.science/hal-03388671/document) — spécification et vérifications de l’algorithme d’ordre d’appel.
 
 [4] [I. E. Hafalir, M. B. Yenmez et M. A. Yildirim, “Effective Affirmative Action in School Choice”, *Theoretical Economics*, 2013](https://www.econometricsociety.org/publications/theoretical-economics/lookup/paper/8775).
+
+[5] [Institut CSA, *Baromètre Parcoursup 2025, vague 6*](https://csa.eu/wp-content/uploads/2025/10/2500648-Baro-Parcoursup-2025-Resultats_1609_vSITE-CSA.pdf).
