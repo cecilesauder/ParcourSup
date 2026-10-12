@@ -1,0 +1,55 @@
+{
+  "official_repository_commit": "65273cd09ff12fa719ac3a0c8ca9ecbd8a1797d2",
+  "official_specification": "https://services.dgesip.fr/fichiers/presentation_algorithmes_parcoursup_2025_finale.pdf",
+  "cases": [
+    {
+      "id": "guide_4_1_taux_boursier_25_pourcent",
+      "source": "Présentation officielle 2025, section 4.1 — l’ordre de sortie est explicitement imprimé dans le guide.",
+      "rate": [1, 4],
+      "ranking": [
+        ["C1", false], ["C2", false], ["B1", true], ["C3", false], ["C4", false],
+        ["C5", false], ["B2", true], ["C6", false], ["C7", false], ["C8", false],
+        ["C9", false], ["C10", false], ["C11", false], ["C12", false], ["C13", false],
+        ["C14", false], ["B3", true], ["C15", false], ["C16", false], ["C17", false]
+      ],
+      "expected_order": [
+        "B1", "C1", "C2", "C3", "B2", "C4", "C5", "C6", "B3", "C7",
+        "C8", "C9", "C10", "C11", "C12", "C13", "C14", "C15", "C16", "C17"
+      ],
+      "expected_basis": "Ordre publié explicitement dans la spécification officielle."
+    },
+    {
+      "id": "demo_A1",
+      "source": "src/main/java/fr/parcoursup/algos/bacasable/ordreappel/ExempleA1.java au commit officiel indiqué ci-dessus.",
+      "rate": [1, 5],
+      "ranking": [
+        ["C1", false], ["C2", false], ["C3", false], ["C4", false],
+        ["C5", false], ["B6", true], ["B7", true], ["C8", false]
+      ],
+      "expected_order": ["B6", "C1", "C2", "C3", "C4", "B7", "C5", "C8"],
+      "expected_basis": "Sortie de référence à figer d’après la règle §4.1; le test Java de démonstration exécute l’exemple sans affirmer cet ordre par assertion."
+    },
+    {
+      "id": "demo_A2",
+      "source": "src/main/java/fr/parcoursup/algos/bacasable/ordreappel/ExempleA2.java au commit officiel indiqué ci-dessus.",
+      "rate": [1, 50],
+      "ranking": [
+        ["C1", false], ["C2", false], ["C3", false], ["C4", false],
+        ["C5", false], ["B6", true], ["C7", false], ["C8", false]
+      ],
+      "expected_order": ["B6", "C1", "C2", "C3", "C4", "C5", "C7", "C8"],
+      "expected_basis": "Sortie de référence à figer d’après la règle §4.1; le test Java de démonstration exécute l’exemple sans affirmer cet ordre par assertion."
+    },
+    {
+      "id": "demo_A4",
+      "source": "src/main/java/fr/parcoursup/algos/bacasable/ordreappel/ExempleA4.java au commit officiel indiqué ci-dessus.",
+      "rate": [1, 10],
+      "ranking": [
+        ["C1", false], ["B2", true], ["B3", true], ["C4", false], ["C5", false],
+        ["C6", false], ["C7", false], ["B8", true], ["C9", false], ["C10", false]
+      ],
+      "expected_order": ["B2", "C1", "B3", "C4", "C5", "C6", "C7", "B8", "C9", "C10"],
+      "expected_basis": "Sortie de référence à figer d’après la règle §4.1; le test Java de démonstration exécute l’exemple sans affirmer cet ordre par assertion."
+    }
+  ]
+}

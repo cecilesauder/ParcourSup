@@ -47,11 +47,13 @@ Ces deux règles ne font pas exactement la même chose : la première produit un
 ## Où en est le projet ?
 
 - [x] Lire et documenter des sources officielles sur le fonctionnement de Parcoursup.
-- [x] Créer un premier prototype et ses tests sur des petits exemples.
+- [x] Créer un premier prototype et le comparer à des exemples officiels de l’ordre d’appel.
 - [x] Examiner les revendications publiques de lycéen·nes et les hypothèses du cahier des charges.
 - [x] Analyser le code public de l’ordre d’appel et des propositions quotidiennes.
+- [x] Ajouter des tests d’ordre exact pour un exemple du guide officiel et les démos A1 à A4.
 - [ ] Recueillir directement les priorités de lycéen·nes aux parcours variés.
-- [ ] Étendre le modèle aux règles liées au secteur géographique et aux propositions quotidiennes.
+- [ ] Étendre le modèle au secteur géographique, puis comparer aux démos A5 et A6 à deux taux.
+- [ ] Ajouter un simulateur distinct des propositions quotidiennes.
 - [ ] Comparer les règles dans des simulations expliquées et reproductibles.
 
 ## Lancer les tests
@@ -75,6 +77,7 @@ Les documents ci-dessous donnent davantage de détails; il n’est pas nécessai
 - [Les revendications lycéennes et l’audit du cahier des charges](docs/revendications-et-audit-cahier-des-charges.md) — ce qui est demandé et les points à clarifier.
 - [Analyse du code actuel et pistes d’amélioration](docs/analyse-algorithme-actuel-et-pistes.md) — explication plus technique du calcul de l’ordre d’appel et des propositions.
 - [Critères d’optimisation et co-conception](docs/criteres-optimisation-et-co-conception.md) — comment traduire les revendications en critères testables sans cacher les choix politiques.
+- [Plan des tests contre les références officielles](docs/plan-tests-validation-officiels.md) — ce qui est déjà testé et ce qui attend l’extension au taux géographique.
 - [Analyse initiale](docs/analyse-initiale.md) — premières conclusions, vérifications et questions ouvertes.
 
 ### Sources principales
